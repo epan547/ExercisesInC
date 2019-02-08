@@ -10,10 +10,16 @@ License: GNU GPLv3
 
 int var1;
 
+void print_address() {
+  int x = 5;
+  printf("Address of local var x is %p\n", &x);
+}
+
 int main ()
 {
     int var2 = 5;
-    void *p = malloc(128);
+    void *k = malloc(16);
+    void *p = malloc(16);
     char *s = "Hello, World";
 
     printf ("Address of main is %p\n", main);
@@ -21,6 +27,8 @@ int main ()
     printf ("Address of var2 is %p\n", &var2);
     printf ("p points to %p\n", p);
     printf ("s points to %p\n", s);
+    printf ("k points to %p\n", k);
+    print_address();
 
     return 0;
 }
