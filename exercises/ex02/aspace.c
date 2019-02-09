@@ -4,6 +4,7 @@ Copyright 2014 Allen Downey
 License: GNU GPLv3
 
 */
+// Diagram and things in picture.
 
 #include <stdio.h>
 #include <stdlib.h>
