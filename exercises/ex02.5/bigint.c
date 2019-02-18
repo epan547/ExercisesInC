@@ -32,9 +32,20 @@ It is the caller's responsibility to free the result.
 s: string
 returns: string
 */
+
+
 char *reverse_string(char *s) {
-    //TODO: Fill this in.
-    return "";
+  // Could have something to do with this being not a pointer
+    char reverse[100];
+    size_t len = strlen(s);
+    char* t = s + len-1;
+    while(t >= s){
+      strncat(reverse, t, 1);
+      t = t - 1;
+    }
+    s = reverse;
+    printf("%s \n", s);
+    return s;
 }
 
 /* ctoi: Converts a character to integer.
@@ -53,8 +64,8 @@ i: integer 0 to 9
 returns: character '0' to '9'
 */
 char itoc(int i) {
-    //TODO: Fill this in, with an appropriate assertion.
-    return '0';
+    assert(i >= 0 && i < 10);
+    return '0' + i;
 }
 
 /* add_digits: Adds two decimal digits, returns the total and carry.
@@ -70,7 +81,20 @@ carry: pointer to char
 
 */
 void add_digits(char a, char b, char c, char *total, char *carry) {
-    //TODO: Fill this in.
+    int sum = ctoi(a) + ctoi(b) + ctoi(c);
+    if(sum > 19){
+      *carry = itoc(2);
+      *total = itoc(sum-20);
+    }
+    else if(sum > 9) {
+      *carry = itoc(1);
+      *total = itoc(sum-10);
+    }
+    else{
+      *carry = itoc(0);
+      *total = itoc(sum);
+    }
+    return;
 }
 
 /* Define a type to represent a BigInt.
@@ -158,6 +182,26 @@ void test_reverse_string() {
     } else {
         printf("reverse_string failed\n");
     }
+
+    // Adding additional tests
+    s = "99999999999999999999999999999999999999999999";
+    printf("%s\n", s);
+    t = reverse_string(s);
+    if (strcmp(t, "99999999999999999999999999999999999999999999") == 0) {
+        printf("reverse_string passed\n");
+    } else {
+        printf("reverse_string failed\n");
+    }
+
+    s = "000000000000000000000000000000000000000000001";
+    printf("%s \n", s);
+    t = reverse_string(s);
+    if (strcmp(t, "100000000000000000000000000000000000000000000") == 0) {
+        printf("reverse_string passed\n");
+    } else {
+        printf("reverse_string failed\n");
+    }
+
 }
 
 void test_itoc() {
@@ -177,6 +221,21 @@ void test_add_digits() {
     } else {
         printf("add_digits failed\n");
     }
+
+    // Adding another test
+    add_digits('9', '9', '9', &total, &carry);
+    if (total == '7' && carry == '2') {
+        printf("add_digits passed\n");
+    } else {
+        printf("add_digits failed\n");
+    }
+
+    add_digits('0', '0', '0', &total, &carry);
+    if (total == '0' && carry == '0') {
+        printf("add_digits passed\n");
+    } else {
+        printf("add_digits failed\n");
+    }
 }
 
 void test_add_bigint() {
@@ -184,12 +243,13 @@ void test_add_bigint() {
     char *t = "99999999999999999999999999999999999999999999";
     char *res = "000000000000000000000000000000000000000000001";
 
-    BigInt big1 = make_bigint(s);    
+    BigInt big1 = make_bigint(s);
     BigInt big2 = make_bigint(t);
     BigInt big3 = malloc(100);
 
-	add_bigint(big1, big2, '0', big3);
-    
+  	add_bigint(big1, big2, '0', big3);
+    printf("%s \n", big3);
+
     if (strcmp(big3, res) == 0) {
         printf("add_bigint passed\n");
     } else {
@@ -205,6 +265,6 @@ int main (int argc, char *argv[])
 
     //TODO: When you have the first three functions working,
     //      uncomment the following, and it should work.
-    // test_add_bigint();
+    test_add_bigint();
     return 0;
 }
