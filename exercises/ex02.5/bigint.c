@@ -37,8 +37,12 @@ returns: string
 char *reverse_string(char *s) {
   // Could have something to do with this being not a pointer
     char reverse[100];
+    // Clear the string
+    memset(reverse, '\0', 100);
     size_t len = strlen(s);
+    // printf("%li \n", len);
     char* t = s + len-1;
+    // printf("%p, %p \n", t, s);
     while(t >= s){
       strncat(reverse, t, 1);
       t = t - 1;
@@ -54,6 +58,9 @@ c: one of the characters '0' to '9'
 returns: integer 0 to 9
 */
 int ctoi(char c) {
+    if(isdigit(c) == 0){
+      return c;
+    }
     assert(isdigit(c));
     return c - '0';
 }
@@ -64,6 +71,9 @@ i: integer 0 to 9
 returns: character '0' to '9'
 */
 char itoc(int i) {
+    if(i<0 || i>9){
+      return '\0';
+    }
     assert(i >= 0 && i < 10);
     return '0' + i;
 }
@@ -175,32 +185,42 @@ BigInt make_bigint(char *s) {
 }
 
 void test_reverse_string() {
-    char *s = "123";
-    char *t = reverse_string(s);
-    if (strcmp(t, "321") == 0) {
-        printf("reverse_string passed\n");
-    } else {
-        printf("reverse_string failed\n");
-    }
 
-    // Adding additional tests
-    s = "99999999999999999999999999999999999999999999";
-    printf("%s\n", s);
-    t = reverse_string(s);
-    if (strcmp(t, "99999999999999999999999999999999999999999999") == 0) {
-        printf("reverse_string passed\n");
-    } else {
-        printf("reverse_string failed\n");
-    }
-
-    s = "000000000000000000000000000000000000000000001";
+    char* s = "000000000000000000000000000000000000000000001";
     printf("%s \n", s);
-    t = reverse_string(s);
+    char* t = reverse_string(s);
     if (strcmp(t, "100000000000000000000000000000000000000000000") == 0) {
         printf("reverse_string passed\n");
     } else {
         printf("reverse_string failed\n");
     }
+
+    //   s = "000000000000000000000000000000000000000000001";
+    // printf("%s \n", s);
+    // t = reverse_string(s);
+    // if (strcmp(t, "100000000000000000000000000000000000000000000") == 0) {
+    //     printf("reverse_string passed\n");
+    // } else {
+    //     printf("reverse_string failed\n");
+    // }  char *s = "123";
+    // char *t = reverse_string(s);
+    // if (strcmp(t, "321") == 0) {
+    //     printf("reverse_string passed\n");
+    // } else {
+    //     printf("reverse_string failed\n");
+    // }
+    //
+    // // Adding additional tests
+    // s = "99999999999999999999999999999999999999999999";
+    // printf("%s\n", s);
+    // t = reverse_string(s);
+    // if (strcmp(t, "99999999999999999999999999999999999999999999") == 0) {
+    //     printf("reverse_string passed\n");
+    // } else {
+    //     printf("reverse_string failed\n");
+    // }
+
+
 
 }
 
@@ -248,7 +268,7 @@ void test_add_bigint() {
     BigInt big3 = malloc(100);
 
   	add_bigint(big1, big2, '0', big3);
-    printf("%s \n", big3);
+    printf("here %s \n", big3);
 
     if (strcmp(big3, res) == 0) {
         printf("add_bigint passed\n");
