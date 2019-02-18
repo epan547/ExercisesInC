@@ -35,11 +35,10 @@ returns: string
 
 
 char *reverse_string(char *s) {
-  // Could have something to do with this being not a pointer
-    char reverse[100];
-    // Clear the string
-    memset(reverse, '\0', 100);
+// Initializing string length
     size_t len = strlen(s);
+  // Creating aray to hold answer.
+    char* reverse = malloc(len);
     // printf("%li \n", len);
     char* t = s + len-1;
     // printf("%p, %p \n", t, s);
@@ -48,7 +47,7 @@ char *reverse_string(char *s) {
       t = t - 1;
     }
     s = reverse;
-    printf("%s \n", s);
+    // printf("%s \n", s);
     return s;
 }
 
@@ -58,9 +57,6 @@ c: one of the characters '0' to '9'
 returns: integer 0 to 9
 */
 int ctoi(char c) {
-    if(isdigit(c) == 0){
-      return c;
-    }
     assert(isdigit(c));
     return c - '0';
 }
@@ -71,9 +67,6 @@ i: integer 0 to 9
 returns: character '0' to '9'
 */
 char itoc(int i) {
-    if(i<0 || i>9){
-      return '\0';
-    }
     assert(i >= 0 && i < 10);
     return '0' + i;
 }
@@ -187,7 +180,7 @@ BigInt make_bigint(char *s) {
 void test_reverse_string() {
 
     char* s = "000000000000000000000000000000000000000000001";
-    printf("%s \n", s);
+    // printf("%s \n", s);
     char* t = reverse_string(s);
     if (strcmp(t, "100000000000000000000000000000000000000000000") == 0) {
         printf("reverse_string passed\n");
@@ -268,7 +261,7 @@ void test_add_bigint() {
     BigInt big3 = malloc(100);
 
   	add_bigint(big1, big2, '0', big3);
-    printf("here %s \n", big3);
+    // printf("here %s \n", big3);
 
     if (strcmp(big3, res) == 0) {
         printf("add_bigint passed\n");
@@ -283,7 +276,6 @@ int main (int argc, char *argv[])
     test_itoc();
     test_add_digits();
 
-    //TODO: When you have the first three functions working,
     //      uncomment the following, and it should work.
     test_add_bigint();
     return 0;
