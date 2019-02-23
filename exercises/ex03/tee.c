@@ -6,11 +6,6 @@ echoes user input, writing it to a filename, specified in the last argument.
 If the -a flag is given, then the user input will be appended to the file,
 instead of re-writing it, if it already exists (default).
 
-
-TODO:
-    - Add error catching
-    - Add additional functionality
-
 */
 #include <stdio.h>
 #include <stdlib.h>
