@@ -43,6 +43,9 @@ void test_get_int_part()
 
     for (int i=0; i<length; i++) {
         //printf("%lf\n", result[i]);
+        double ipart;
+        modf(array[i], &ipart);
+        int_part[i] = ipart;
         assert(int_part[i] == expected[i]);
     }
 }
@@ -70,6 +73,7 @@ void test_get_both_parts()
     double *int_part = get_both_parts(array, length, &frac_part);
 
     for (int i=0; i<length; i++) {
+        frac_part = modf(array[i], &frac_part);
         printf("%.18lf  %.18lf\n", int_part[i], expected_int[i]);
         printf("%.18lf  %.18lf\n", frac_part[i], expected_frac[i]);
         assert(int_part[i] == expected_int[i]);
