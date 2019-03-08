@@ -78,34 +78,6 @@ float my_random_float2()
 // compute a random double using my algorithm
 double my_random_double()
 {
-  // int x, exp, mant;
-  // float f;
-  //
-  // // this union is for assembling the float.
-  // union {
-  //     double f;
-  //     long i;
-  // } b;
-  //
-  // // generate 31 random bits (assuming that RAND_MAX is 2^31 - 1
-  // x = random();
-  //
-  // // use bit-scan-forward to find the first set bit and
-  // // compute the exponent
-  // asm ("bsfl %1, %0"
-  // :"=r"(exp)
-  // :"r"(x)
-  // );
-  // exp = 1022 - exp;
-  //
-  // // use the other 23 bits for the mantissa (for small numbers
-  // // this means we are re-using some bits)
-  // mant = x >> 11;
-  // b.i = (exp << 31) | mant;
-  //
-  // return b.f;
-
-    // TODO: fill this in
     // Size error, so change this to long
     long x;
     long mant;
