@@ -46,7 +46,7 @@ char *strfilter3(char *string, char *letters) {
             buffer[j++] = string[i];
         }
     }
-    return buffer;
+    return strdup(buffer);
 }
 
 char *strfilter4(char *string, char *letters) {

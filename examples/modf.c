@@ -32,6 +32,15 @@ length: number of elements in the array
 returns: new array, caller must free
 */
 // TODO: Write this function
+double* get_int_part(double* array, int length){
+  double *res = malloc(length * sizeof(double));
+  double intpart;
+
+  for(int i = 0; i < length; i++){
+    modf(array[i], res+i);
+  }
+  return res;
+}
 
 void test_get_int_part()
 {
@@ -42,12 +51,12 @@ void test_get_int_part()
     double *int_part = get_int_part(array, length);
 
     for (int i=0; i<length; i++) {
-        //printf("%lf\n", result[i]);
-        double ipart;
-        modf(array[i], &ipart);
-        int_part[i] = ipart;
-        assert(int_part[i] == expected[i]);
+        assert(abs(int_part[i] - expected[i]) < 1e-8);
     }
+}
+
+double * get_both_parts(array, length, &fracpart){
+
 }
 
 
@@ -73,11 +82,11 @@ void test_get_both_parts()
     double *int_part = get_both_parts(array, length, &frac_part);
 
     for (int i=0; i<length; i++) {
-        frac_part = modf(array[i], &frac_part);
+        // frac_part = modf(array[i], &frac_part);
         printf("%.18lf  %.18lf\n", int_part[i], expected_int[i]);
-        printf("%.18lf  %.18lf\n", frac_part[i], expected_frac[i]);
+        // printf("%.18lf  %.18lf\n", frac_part[i], expected_frac[i]);
         assert(int_part[i] == expected_int[i]);
-        assert(frac_part[i] == expected_frac[i]);
+        // assert(frac_part[i] == expected_frac[i]);
     }
 }
 
