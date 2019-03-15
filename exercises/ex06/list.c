@@ -55,7 +55,14 @@ void print_list(Node **list) {
 */
 int pop(Node **list) {
     // FILL THIS IN!
-    return 0;
+    Node* first = *list;
+    if(first->next == NULL){
+      return -1;
+    }
+    int save = first->val;
+    *list = first -> next;
+    free(first);
+    return save;
 }
 
 
@@ -65,7 +72,9 @@ int pop(Node **list) {
 * val: value to add
 */
 void push(Node **list, int val) {
-    // FILL THIS IN!
+    // initialize new head node, point to dereferenced head pointer of current list
+    Node *head = make_node(val, *list);
+    *list = head;
 }
 
 
@@ -80,6 +89,22 @@ void push(Node **list, int val) {
 */
 int remove_by_value(Node **list, int val) {
     // FILL THIS IN!
+    Node *this = *list;
+    // make sure the first node isn't the match
+    if(this->val == val){
+      pop(&this);
+      return 1;
+    }
+    while(this->next != NULL){
+      if(this->next->val == val){
+        Node *temp = this->next;
+        this->next = this->next->next;
+        // temp->next = NULL;
+        free(temp);
+        return 1;
+      }
+      this = this->next;
+    }
     return 0;
 }
 
@@ -91,7 +116,31 @@ int remove_by_value(Node **list, int val) {
 * list: pointer to pointer to Node
 */
 void reverse(Node **list) {
-    // FILL THIS IN!
+    // FIX THIS! -Emma
+
+    Node* prev = *list;
+    Node* curr = prev->next;
+    Node* after = curr->next;
+
+    prev->next = NULL;
+
+    while(after != NULL){
+      curr->next = prev;
+
+      prev = curr;
+      curr = after;
+      after = curr->next;
+    }
+    curr->next = prev;
+    *list = curr;
+    // free(prev);
+    free_node(&curr);
+    free_node(&after);
+}
+
+void free_node(Node ** n){
+  n->next = NULL;
+  free(n);
 }
 
 
@@ -99,7 +148,7 @@ int main() {
     Node *head = make_node(1, NULL);
     head->next = make_node(2, NULL);
     head->next->next = make_node(3, NULL);
-    head->next->next->next = make_node(4, NULL);
+    head->next->next->next = make_node(4, NULL); // pointer to NULL is 0
 
     Node **list = &head;
     print_list(list);
