@@ -133,16 +133,7 @@ void reverse(Node **list) {
     }
     curr->next = prev;
     *list = curr;
-    // free(prev);
-    free_node(&curr);
-    free_node(&after);
 }
-
-void free_node(Node ** n){
-  n->next = NULL;
-  free(n);
-}
-
 
 int main() {
     Node *head = make_node(1, NULL);
