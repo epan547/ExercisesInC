@@ -179,6 +179,9 @@ int hash_hashable(Hashable *hashable)
 int equal_int (void *ip, void *jp)
 {
     // FILL THIS IN!
+    if(*(int*)ip == *(int*)jp){
+      return 1;
+    }
     return 0;
 }
 
@@ -193,6 +196,10 @@ int equal_int (void *ip, void *jp)
 int equal_string (void *s1, void *s2)
 {
     // FILL THIS IN!
+    int i = strcmp((char*)s1, (char*)s2);
+    if(*(char*)s1 == *(char*)s2){
+      return 1;
+    }
     return 0;
 }
 
@@ -208,6 +215,7 @@ int equal_string (void *s1, void *s2)
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FILL THIS IN!
+
     return 0;
 }
 
@@ -367,6 +375,7 @@ int main ()
     Hashable *hashable1 = make_hashable_int (1);
     Hashable *hashable2 = make_hashable_string ("Apple");
     Hashable *hashable3 = make_hashable_int (2);
+    Hashable *hashable4 = make_hashable_string ("Pear");
 
     // make a list by hand
     Value *value1 = make_int_value (17);
@@ -404,6 +413,12 @@ int main ()
 
     value = map_lookup(map, hashable3);
     print_lookup(value);
+
+    int ret = equal_string(hashable2, hashable4);
+    printf("%i\n",ret);
+
+    ret = equal_int(hashable1, hashable3);
+    printf("%i\n",ret);
 
     return 0;
 }

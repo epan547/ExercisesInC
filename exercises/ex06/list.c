@@ -77,6 +77,24 @@ void push(Node **list, int val) {
     *list = head;
 }
 
+int swap(Node** list) {
+  Node* first = *list;
+  if(first->next == NULL){
+    return -1;
+  }
+  Node* second = first->next;
+  if(second->next == NULL){
+    return -1;
+  }
+  Node* third = second->next;
+  Node* fourth = third->next;
+
+  first->next = third;
+  third->next = second;
+  second->next = fourth;
+
+  return 1;
+}
 
 /* Removes the first element with the given value
 *
@@ -145,6 +163,9 @@ int main() {
     print_list(list);
 
     int retval = pop(list);
+    print_list(list);
+
+    int val = swap(list);
     print_list(list);
 
     push(list, retval+10);
