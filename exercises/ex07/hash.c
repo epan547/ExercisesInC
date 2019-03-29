@@ -197,7 +197,7 @@ int equal_string (void *s1, void *s2)
 {
     // FILL THIS IN!
     int i = strcmp((char*)s1, (char*)s2);
-    if(*(char*)s1 == *(char*)s2){
+    if(i == 0){
       return 1;
     }
     return 0;
@@ -215,6 +215,10 @@ int equal_string (void *s1, void *s2)
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FILL THIS IN!
+
+    if(*(int*)h1 == *(int*)h2){
+      return 1;
+    }
 
     return 0;
 }
@@ -305,6 +309,13 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 Value *list_lookup(Node *list, Hashable *key)
 {
     // FILL THIS IN!
+    Node *this = list;
+    while(this != NULL){
+      if(this->key == key){
+        return this->value;
+      }
+      this = this->next;
+    }
     return NULL;
 }
 
@@ -350,6 +361,10 @@ void print_map(Map *map)
 void map_add(Map *map, Hashable *key, Value *value)
 {
     // FILL THIS IN!
+    Node *next = map->lists[key->hash(key->key)];
+    Node *new = make_node(key, value, next);
+    map->lists[key->hash(key->key)] = new;
+
 }
 
 
@@ -357,6 +372,9 @@ void map_add(Map *map, Hashable *key, Value *value)
 Value *map_lookup(Map *map, Hashable *key)
 {
     // FILL THIS IN!
+    if(map->lists[key->hash(key->key)] != NULL){
+      return (map->lists[key->hash(key->key)])->value;
+    };
     return NULL;
 }
 
@@ -414,11 +432,17 @@ int main ()
     value = map_lookup(map, hashable3);
     print_lookup(value);
 
-    int ret = equal_string(hashable2, hashable4);
+    // tests for equals functions
+    // Value *value3 = make_string_value ("hi");
+    // int ret = equal_string(value2, value3);
+    // printf("%i\n",ret);
+    //
+    Value *value4 = make_int_value(23)
+    ret = equal_int(value1, value4);
     printf("%i\n",ret);
 
-    ret = equal_int(hashable1, hashable3);
-    printf("%i\n",ret);
+    // ret = equal_hashable(hashable1, hashable3);
+    // printf("%i\n",ret);
 
     return 0;
 }
