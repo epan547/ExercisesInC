@@ -104,7 +104,7 @@ typedef struct {
 */
 Hashable *make_hashable(void *key,
     int (*hash) (void *),
-    int (*equal) (void *, void *))
+    int (void *, void *))
 {
     Hashable *hashable = (Hashable *) malloc (sizeof (Hashable));
     hashable->key = key;
@@ -216,11 +216,7 @@ int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FILL THIS IN!
 
-    if(*(int*)h1 == *(int*)h2){
-      return 1;
-    }
-
-    return 0;
+    return h1->equal(h1->key,h2->key);
 }
 
 
@@ -437,9 +433,9 @@ int main ()
     // int ret = equal_string(value2, value3);
     // printf("%i\n",ret);
     //
-    Value *value4 = make_int_value(23)
-    ret = equal_int(value1, value4);
-    printf("%i\n",ret);
+    // Value *value4 = make_int_value(23)
+    // ret = equal_int(value1, value4);
+    // printf("%i\n",ret);
 
     // ret = equal_hashable(hashable1, hashable3);
     // printf("%i\n",ret);
