@@ -69,6 +69,16 @@ void reduce_matrix_rows(Matrix *matrix, int i, int j) {
     }
 }
 
+int compare_rows(const void* point_a, const void* point_b) {
+  double a = **(double**) point_a;
+  double b = **(double**) point_b;
+  return b-a; //a-b is ascending, b-a is descending
+}
+
+void sort_matrix(Matrix *matrix){
+  qsort(matrix->rows, matrix->num_rows, sizeof(double), compare_rows);
+}
+
 int main () {
     Matrix *matrix = make_matrix(3, 4);
     for (int i=0; i<matrix->num_rows; i++) {
@@ -81,6 +91,8 @@ int main () {
     printf("reducing...\n");
     reduce_matrix_rows(matrix, 1, 0);
     reduce_matrix_rows(matrix, 2, 0);
+    print_matrix(matrix);
+    sort_matrix(matrix);
     print_matrix(matrix);
 
     free_matrix(matrix);
