@@ -26,13 +26,10 @@ gcc 'pkg‑config ‑‑cflags ‑‑libs glib‑2.0' ‑o words word_count.c
 // }
 
 int main(int argc, char** argv) {
-    GList* list = NULL;
     char buf[1000];
-    list = g_list_append(list, "Hello world!");
-    printf("The first item is '%s'\n", (char *) g_list_first(list)->data);
     // read_file("text.txt");
 
-    GHashTable∗ hash = g_hash_table_new(g_str_hash, g_str_equal);
+    GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
 
     FILE *ptr_file;
     char delim[] = " ";
@@ -45,24 +42,38 @@ int main(int argc, char** argv) {
     }
 
     while (fgets(buf,1000, ptr_file)!=NULL) {
-        printf("%s",buf);
+        printf("%s\n",buf);
         char *ptr = strtok(buf, delim);
+        if(!ptr) continue;
 
       	while(ptr != NULL) {
+          // splitting text line into words by spaces
       		printf("'%s'\n", ptr);
       		ptr = strtok(NULL, delim);
 
-          char∗∗ key_ptr = &state;
-          char∗∗ value_ptr = &capital;
-          gboolean result = g_hash_table_lookup_extended(hash, buf, (gpointer∗)key_ptr, (gpointer∗)value_ptr);
+          if (!ptr) continue;
 
-          if(gboolean == true){
-            g_hash_table_insert(hash, key_ptr, &(*value_ptr+1));
+          char *key = ptr;
+          int *val;
+
+          char *old_key;
+          int *old_value;
+
+          /* Try looking up this key. */
+          if (g_hash_table_lookup_extended (hash, key, &old_key, &old_value)) {
+              /* Insert the new value */
+              g_hash_table_insert (hash, g_strdup (key), *old_value+1);
+              /* Just free the key and value */
+              g_free (old_key);
+              g_free (old_value);
           }
-          else{
-            g_hash_table_insert(hash, &buf, &0);
+          else
+          {
+              /* Insert into our hash table it is not a duplicate. */
+              g_hash_table_insert (hash, g_strdup (key), 0);
           }
         }
+        printf("%s",hash);
     }
 
 
