@@ -25,11 +25,19 @@ gcc 'pkg‑config ‑‑cflags ‑‑libs glib‑2.0' ‑o words word_count.c
 // 		return  0;
 // }
 
+static void print_table(gpointer key, gpointer value)
+{
+    printf("Key: %s, Value: %i\n", *key, *value);
+}
+
+
+
 int main(int argc, char** argv) {
     char buf[1000];
     // read_file("text.txt");
 
     GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
+    int table_size = 0;
 
     FILE *ptr_file;
     char delim[] = " ";
@@ -53,8 +61,8 @@ int main(int argc, char** argv) {
 
           if (!ptr) continue;
 
-          char *key = ptr;
-          int *val;
+          gpointer key = ptr;
+          gpointer val;
 
           char *old_key;
           int *old_value;
@@ -71,12 +79,15 @@ int main(int argc, char** argv) {
           {
               /* Insert into our hash table it is not a duplicate. */
               g_hash_table_insert (hash, g_strdup (key), 0);
+              table_size ++;
           }
         }
-        printf("%s",hash);
     }
 
+    int total = 0;
 
+    // Print the results
+    g_hash_table_foreach(hash, print_table, &total);
 		fclose(ptr_file);
 
     return 0;
