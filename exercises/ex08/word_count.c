@@ -8,32 +8,16 @@ gcc 'pkg‑config ‑‑cflags ‑‑libs glib‑2.0' ‑o words word_count.c
 #include <stdlib.h>
 #include <glib.h>
 
-// int read_file(char* filename){
-// 		FILE *ptr_file;
-// 		int x;
-//
-// 		ptr_file =fopen(filename, "r");
-//     fprintf("%s",filename);
-// 		if (!ptr_file)
-// 			return 1;
-//
-// 		for (x=1; x<=10; x++)
-// 			fprintf(ptr_file,"%d\n", x);
-//
-// 		fclose(ptr_file);
-//
-// 		return  0;
-// }
-
-static void print_table(gpointer key, gpointer value)
+void print_table(gpointer key, gpointer value)
 {
-    printf("Key: %s, Value: %i\n", *key, *value);
+    printf("Key: %s, Value: %i\n", (gchar*)key, (gint)value);
 }
 
 
 
 int main(int argc, char** argv) {
     char buf[1000];
+
     // read_file("text.txt");
 
     GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -49,8 +33,9 @@ int main(int argc, char** argv) {
       return 1;
     }
 
+    // Separate the words in the file
     while (fgets(buf,1000, ptr_file)!=NULL) {
-        printf("%s\n",buf);
+        // printf("%s\n",buf);
         char *ptr = strtok(buf, delim);
         if(!ptr) continue;
 
@@ -61,33 +46,25 @@ int main(int argc, char** argv) {
 
           if (!ptr) continue;
 
-          gpointer key = ptr;
-          gpointer val;
+          gchar* key = g_strdup(ptr);
+          gint val = 1;
 
-          char *old_key;
-          int *old_value;
+          int value = (int) g_hash_table_lookup(hash, key);
+          // printf("%i\n", value);
+          if(value == 0){
+            g_hash_table_insert(hash, g_strdup(key),GINT_TO_POINTER(1));
+          }
+          else{
+            g_hash_table_insert(hash, g_strdup(key),GINT_TO_POINTER(value+1));
+          }
 
-          /* Try looking up this key. */
-          if (g_hash_table_lookup_extended (hash, key, &old_key, &old_value)) {
-              /* Insert the new value */
-              g_hash_table_insert (hash, g_strdup (key), *old_value+1);
-              /* Just free the key and value */
-              g_free (old_key);
-              g_free (old_value);
-          }
-          else
-          {
-              /* Insert into our hash table it is not a duplicate. */
-              g_hash_table_insert (hash, g_strdup (key), 0);
-              table_size ++;
-          }
+          g_hash_table_foreach(hash, (GHFunc)print_table, key); // key is just a placeholder
         }
     }
 
-    int total = 0;
-
+    // char* fake = "hi";
     // Print the results
-    g_hash_table_foreach(hash, print_table, &total);
+    // g_hash_table_foreach(hash, print_table, &fake);
 		fclose(ptr_file);
 
     return 0;
