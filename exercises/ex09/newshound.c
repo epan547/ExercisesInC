@@ -22,6 +22,8 @@ void error(char *msg)
 
 int main(int argc, char *argv[])
 {
+    pid_t pid;
+    int status;
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <search phrase>\n", argv[0]);
         return 1;
@@ -43,10 +45,48 @@ int main(int argc, char *argv[])
         sprintf(var, "RSS_FEED=%s", feeds[i]);
         char *vars[] = {var, NULL};
 
-        int res = execle(PYTHON, PYTHON, SCRIPT, search_phrase, NULL, vars);
-        if (res == -1) {
-            error("Can't run script.");
+        // create a child process
+        printf("CREATING CHILD WITH %s.\n", feeds[i]);
+        pid = fork();
+
+        /* check for an error */
+        if (pid == -1) {
+            fprintf(stderr, "fork failed: %s\n", strerror(errno));
+            perror(argv[0]);
+            exit(1);
+        }
+
+        if (pid == -1) {
+          fprintf(stderr, "Can't fork process: %s\n", strerror(errno));
+          exit(1);
+        }
+        if (pid == 0) {
+          if(execle(PYTHON, PYTHON, SCRIPT, search_phrase, NULL, vars)==-1){
+             error("Can't run script.");
+             exit(1);
+          }
+          exit(i);
         }
     }
+
+    /* parent continues */
+    printf("Hello from the parent.\n");
+
+    for (int i=0; i<num_feeds; i++) {
+        pid = wait(&status);
+
+        if (pid == -1) {
+            fprintf(stderr, "wait failed: %s\n", strerror(errno));
+            perror(argv[0]);
+            exit(1);
+        }
+
+        // check the exit status of the child
+        status = WEXITSTATUS(status);
+
+        printf("Child %d exited with error code %d.\n", pid, status);
+    }
+
+    exit(0);
     return 0;
 }

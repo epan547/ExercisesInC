@@ -14,11 +14,10 @@ License: MIT License https://opensource.org/licenses/MIT
 #include <sys/types.h>
 #include <wait.h>
 
-
+int globalVar=0;
 // errno is an external global variable that contains
 // error information
 extern int errno;
-
 
 // get_seconds returns the number of seconds since the
 // beginning of the day, with microsecond precision
@@ -46,6 +45,12 @@ int main(int argc, char *argv[])
     double start, stop;
     int i, num_children;
 
+    int* p = (int*) malloc(2);
+    int localVar = 0;
+
+    // char* test = malloc(sizeOf(char));
+    // test = "hello";
+
     // the first command-line argument is the name of the executable.
     // if there is a second, it is the number of children to create.
     if (argc == 2) {
@@ -72,8 +77,19 @@ int main(int argc, char *argv[])
 
         /* see if we're the parent or the child */
         if (pid == 0) {
-            child_code(i);
-            exit(i);
+          // Malloc a new integer and print the address. Never changes, because each thread mallocs the same space, not knowing another already took it
+          int* k = (int*) malloc(2);
+          // Increment the local malloced, and global variables, to show if that changes.
+          // Each thread increments them once, instead of building off of each other.
+          localVar ++;
+          *p += 10;
+          globalVar ++;
+          printf("Local Variable = %i\n",localVar);
+          printf("Heap Variable = %i\n", *p);
+          printf("Global Variable = %i\n",globalVar);
+          printf("Address of k is: %p\n",k);
+          child_code(i);
+          exit(i);
         }
     }
 
@@ -91,6 +107,12 @@ int main(int argc, char *argv[])
 
         // check the exit status of the child
         status = WEXITSTATUS(status);
+
+        // Print the address of the local variable, so we can check to make sure that all stacks are in the same address space
+        // they are probably using the same page table
+        int y = 2;
+        printf("Address of y is %p\n",&y);
+
         printf("Child %d exited with error code %d.\n", pid, status);
     }
     // compute the elapsed time
