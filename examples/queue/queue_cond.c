@@ -70,6 +70,7 @@ int queue_full(Queue *queue)
 /* Add an element to the queue.
 */
 void queue_push(Queue *queue, int item) {
+  // queue blocks if full
     mutex_lock(queue->mutex);
     if (queue_full(queue)) {
         mutex_unlock(queue->mutex);
@@ -93,4 +94,3 @@ int queue_pop(Queue *queue) {
     mutex_unlock(queue->mutex);
     return item;
 }
-

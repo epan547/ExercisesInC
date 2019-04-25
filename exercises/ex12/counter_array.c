@@ -79,7 +79,7 @@ void child_code(Shared *shared)
         shared->counter++;
 
         if (shared->counter % 10000 == 0) {
-            // printf("%d\n", shared->counter);
+            printf("%d\n", shared->counter);
         }
     }
 }
