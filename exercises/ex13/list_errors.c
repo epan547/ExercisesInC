@@ -46,7 +46,6 @@ void print_list(Node **list) {
     printf("]\n");
 }
 
-
 /* Removes and returns the first element of a list.
 *
 * list: pointer to pointer to Node
@@ -66,6 +65,7 @@ int pop(Node **list) {
     free(head);
     *list = next_node;
 
+    free(next_node);
     return retval;
 }
 
@@ -107,6 +107,7 @@ int remove_by_value(Node **list, int val) {
             Node *victim = node->next;
             node->next = victim->next;
             free(victim);
+
             return 1;
         }
     }
@@ -136,6 +137,8 @@ void reverse(Node **list) {
         node = next;
         next = temp;
     }
+    free(next);
+    free(temp);
     *list = node;
 }
 
@@ -178,6 +181,18 @@ Node *make_something() {
     return node3;
 }
 
+// frees all the nodes in a list after the given node1
+void free_list(Node **head){
+  Node *node = *head;
+  Node *next = node->next;
+
+  while(next != NULL){
+    free(node);
+    node = next;
+    next = node->next;
+  }
+  free(node);
+}
 
 int main() {
     // make a list of even numbers
@@ -207,7 +222,9 @@ int main() {
     print_list(&empty);
 
     Node *something = make_something();
-    free(something);
+    free_list(&something);
+    free_list(&empty);
+    free_list(&test_list);
 
     return 0;
 }

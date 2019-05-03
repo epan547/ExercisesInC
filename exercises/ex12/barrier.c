@@ -18,15 +18,16 @@ License: GNU GPLv3
 typedef struct {
     int counter;
     Mutex *mutex;
+    Cond *printwait;
 } Shared;
 
 /* Allocate the shared structure.
 */
-Shared *make_shared()
-{
+Shared *make_shared() {
     Shared *shared = check_malloc(sizeof(Shared));
     shared->counter = 0;
     shared->mutex = make_mutex();
+    shared->printwait = make_cond(); // new condition variable
     return shared;
 }
 
@@ -45,12 +46,18 @@ void child_code(Shared *shared)
     // objects.
 
     printf("Child part 1\n");
+    mutex_lock(shared->mutex); // must be locked before unlocking
+
     shared->counter++;
     while (shared->counter < NUM_CHILDREN) {
+      cond_wait(shared->printwait, shared->mutex);
         // do nothing
         // Running this loop over and over is called busy waiting.
+
     }
     printf("Child part 2\n");
+    mutex_unlock(shared->mutex);
+    cond_signal(shared->printwait); // tells the thread to proceed
 }
 
 /* Entry point for the child threads.
